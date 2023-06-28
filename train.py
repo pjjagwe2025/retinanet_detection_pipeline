@@ -13,7 +13,8 @@ from config import (
     RESIZE_TO,
     BATCH_SIZE,
     LR,
-    AMP
+    AMP,
+    RESOLUTIONS
 )
 from model import create_model
 from utils.general import (
@@ -64,8 +65,15 @@ if __name__ == '__main__':
     print(f"Number of validation samples: {len(valid_dataset)}\n")
 
     # Initialize the model and move to the computation device.
+    if RESOLUTIONS is not None:
+        min_size = RESOLUTIONS[0][0]
+        max_size = RESOLUTIONS[-1][0]
+    else:
+        min_size, max_size = RESIZE_TO, RESIZE_TO
+    print(f"[INFO] Model will resize images to min: {min_size}x{min_size}")
+    print(f"[INFO] Model will resize images to max: {max_size}x{max_size}")
     model = create_model(
-        num_classes=NUM_CLASSES, min_size=RESIZE_TO, max_size=RESIZE_TO
+        num_classes=NUM_CLASSES, min_size=min_size, max_size=max_size
     )
     model = model.to(DEVICE)
     print(model)
@@ -105,7 +113,8 @@ if __name__ == '__main__':
             train_loader, 
             optimizer, 
             DEVICE,
-            scaler=SCALER
+            scaler=SCALER,
+            resolutions=RESOLUTIONS
         )
         stats = validate(model, valid_loader, DEVICE)
         print(f"Epoch #{epoch+1} train loss: {train_loss:.3f}")   

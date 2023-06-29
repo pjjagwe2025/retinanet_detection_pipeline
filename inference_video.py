@@ -58,7 +58,7 @@ os.makedirs(OUT_DIR, exist_ok=True)
 COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))
 
 # Load the best model and trained weights.
-model = create_model(num_classes=NUM_CLASSES, training=False)
+model = create_model(num_classes=NUM_CLASSES)
 checkpoint = torch.load(args.weights, map_location=DEVICE)
 model.load_state_dict(checkpoint['model_state_dict'])
 model.to(DEVICE).eval()

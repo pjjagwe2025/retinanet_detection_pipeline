@@ -59,13 +59,12 @@ def train(
         optimizer.zero_grad()
         images, targets = data
 
-        if resolutions is not None:
-            # Choose a random resolution.
-            new_res = random.choice(resolutions)
-            # Adjust the image size and targets.
-            images, targets = zip(*[adjust_image_size(image, target, new_res) for image, target in zip(images, targets)])
+        # if resolutions is not None:
+        #     # Choose a random resolution.
+        #     new_res = random.choice(resolutions)
+        #     # Adjust the image size and targets.
+        #     images, targets = zip(*[adjust_image_size(image, target, new_res) for image, target in zip(images, targets)])
         
-        size = f"{images[0].shape[1]}x{images[0].shape[2]}"
         images = list(image.to(device) for image in images)
         targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
 
@@ -86,7 +85,7 @@ def train(
             losses.backward()
             optimizer.step()
 
-        prog_bar.set_description(desc=f"Loss: {loss_value:.4f}, Size: {size}")
+        prog_bar.set_description(desc=f"Loss: {loss_value:.4f}")
     return loss_value
 
 # Function for running validation iterations.

@@ -66,7 +66,6 @@ if __name__ == '__main__':
 
     # Initialize the model and move to the computation device.
     if RESOLUTIONS is not None:
-        # min_size = RESOLUTIONS[0][0]
         min_size = tuple(RESOLUTIONS[i][0] for i in range(len(RESOLUTIONS)))
         max_size = RESOLUTIONS[-1][0]
     else:
@@ -78,7 +77,6 @@ if __name__ == '__main__':
         num_classes=NUM_CLASSES, 
         min_size=min_size, 
         max_size=max_size, 
-        training=True
     )
     model = model.to(DEVICE)
     print(model)

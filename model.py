@@ -4,9 +4,7 @@ import torch
 from functools import partial
 from torchvision.models.detection.retinanet import RetinaNetClassificationHead
 
-def create_model(
-    num_classes=91, min_size=640, max_size=640, training=False
-):
+def create_model(num_classes=91, min_size=640, max_size=640):
     model = torchvision.models.detection.retinanet_resnet50_fpn_v2(
         weights='DEFAULT'
     )
@@ -19,11 +17,8 @@ def create_model(
         norm_layer=partial(torch.nn.GroupNorm, 32)
     )
 
-    if training:
-        model.transform._skip_resize = True
-    else:
-        model.transform.min_size = min_size
-        model.transform.max_size = max_size
+    model.transform.min_size = min_size
+    model.transform.max_size = max_size
     return model
 
 if __name__ == '__main__':

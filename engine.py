@@ -11,31 +11,6 @@ from metrics import utils
 from tqdm.auto import tqdm
 from torchvision.transforms.functional import resize
 
-def adjust_image_size(image, target, new_size):
-    # Calculate scaling factors
-    old_width, old_height = image.shape[1], image.shape[2]
-    new_width, new_height = new_size
-    width_scale = new_width / old_width
-    height_scale = new_height / old_height
-
-    # Resize image
-    image = resize(image, new_size)
-    # np_image = np.ascontiguousarray(image.numpy().transpose([1, 2, 0]))
-
-    # Adjust bounding boxes
-    for box in target["boxes"]:
-        x_min, y_min, x_max, y_max = box.tolist()
-        x_min *= width_scale
-        x_max *= width_scale
-        y_min *= height_scale
-        y_max *= height_scale
-        # cv2.rectangle(np_image, (int(x_min), int(y_min)), (int(x_max), int(y_max)), color=(0, 0, 255), thickness=2)
-        # cv2.imshow('Image', np_image)
-        # cv2.waitKey(0)
-        box = torch.tensor([x_min, y_min, x_max, y_max])
-
-    return image, target
-
 # Function for running training iterations.
 def train(
     model, 
@@ -43,7 +18,6 @@ def train(
     optimizer, 
     device, 
     scaler=None, 
-    resolutions=None
 ):
     print('Training')
     model.train()
@@ -58,12 +32,6 @@ def train(
     for i, data in enumerate(prog_bar):
         optimizer.zero_grad()
         images, targets = data
-
-        # if resolutions is not None:
-        #     # Choose a random resolution.
-        #     new_res = random.choice(resolutions)
-        #     # Adjust the image size and targets.
-        #     images, targets = zip(*[adjust_image_size(image, target, new_res) for image, target in zip(images, targets)])
         
         images = list(image.to(device) for image in images)
         targets = [{k: v.to(device) for k, v in t.items()} for t in targets]

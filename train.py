@@ -70,9 +70,7 @@ if __name__ == '__main__':
         max_size = RESOLUTIONS[-1][0]
     else:
         min_size, max_size = (RESIZE_TO, ), RESIZE_TO
-    # print(f"[INFO] Model will resize images to min: {min_size}x{min_size}")
-    # print(f"[INFO] Model will resize images to max: {max_size}x{max_size}")
-    print(f"[INFO] Input image sizes to be randomly choses: {RESOLUTIONS}")
+    print(f"[INFO] Input image sizes to be randomly chosen: {RESOLUTIONS}")
     model = create_model(
         num_classes=NUM_CLASSES, 
         min_size=min_size, 
@@ -117,7 +115,6 @@ if __name__ == '__main__':
             optimizer, 
             DEVICE,
             scaler=SCALER,
-            resolutions=RESOLUTIONS
         )
         stats = validate(model, valid_loader, DEVICE)
         print(f"Epoch #{epoch+1} train loss: {train_loss:.3f}")   
